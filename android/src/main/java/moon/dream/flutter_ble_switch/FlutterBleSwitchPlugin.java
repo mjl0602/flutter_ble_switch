@@ -24,9 +24,7 @@ public class FlutterBleSwitchPlugin implements MethodCallHandler {
      * Plugin registration.
      */
     public static void registerWith(Registrar registrar) {
-        final MethodChannel channel = new MethodChannel(registrar.messenger(),
-                                                        "flutter_ble_switch"
-        );
+        final MethodChannel channel = new MethodChannel(registrar.messenger(), "flutter_ble_switch");
 
         FlutterBleSwitchPlugin plugin = new FlutterBleSwitchPlugin();
         plugin.init(registrar);
@@ -51,6 +49,9 @@ public class FlutterBleSwitchPlugin implements MethodCallHandler {
             case "enable":
                 enable(result);
                 return;
+            case "disable":
+                disable(result);
+                return;
             default:
                 result.notImplemented();
                 return;
@@ -73,8 +74,20 @@ public class FlutterBleSwitchPlugin implements MethodCallHandler {
      */
     private void enable(Result result) {
         try {
-            bluetoothAdapter.enable();
-            result.success(true);
+            boolean res = bluetoothAdapter.enable();
+            result.success(res);
+        } catch (Exception e) {
+            result.success(false);
+        }
+    }
+
+    /**
+     * Disable
+     */
+    private void disable(Result result) {
+        try {
+            boolean res = bluetoothAdapter.disable();
+            result.success(res);
         } catch (Exception e) {
             result.success(false);
         }
